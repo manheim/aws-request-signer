@@ -26,7 +26,7 @@ import java.util.*;
  *
  * @author Eric Haynes
  */
-class V4RequestSigner implements RequestSigner {
+public class V4RequestSigner implements RequestSigner {
    public static final String ENCODING = "UTF8";
    public static final String ISO_8601_TIME_FORMAT = "yyyyMMdd'T'HHmmss'Z'";
    public static final String ISO_8601_DATE_FORMAT = "yyyyMMdd";
