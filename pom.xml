@@ -4,7 +4,7 @@
 
   <groupId>com.manheim</groupId>
   <artifactId>aws-request-signer</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>aws-request-signer</name>
@@ -32,7 +32,7 @@
 
     <dependency>
       <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk</artifactId>
+      <artifactId>aws-java-sdk-core</artifactId>
       <version>1.10.30</version>
     </dependency>
   </dependencies>
