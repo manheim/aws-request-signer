@@ -120,6 +120,7 @@ public class V4RequestSigner implements RequestSigner {
    }
 
    StringBuilder addCanonicalQueryString(String queryString, StringBuilder builder) {
+      int startingLength = builder.length();
       SortedMap<String, String> encodedParams = new TreeMap<>();
       for (String queryParam : queryString.split("&")) {
          if (!queryParam.isEmpty()) {
@@ -128,7 +129,7 @@ public class V4RequestSigner implements RequestSigner {
          }
       }
       for (Map.Entry<String, String> entry : encodedParams.entrySet()) {
-         if (builder.length() > 0) {
+         if (builder.length() > startingLength) {
             builder.append('&');
          }
          builder.append(entry.getKey()).append('=').append(entry.getValue());

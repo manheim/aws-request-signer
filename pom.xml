@@ -4,7 +4,7 @@
 
   <groupId>com.manheim</groupId>
   <artifactId>aws-request-signer</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <packaging>jar</packaging>
 
   <name>aws-request-signer</name>
@@ -36,6 +36,14 @@
       <version>1.10.30</version>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>man-dc4dev-artifactory01.ove.local</id>
+      <name>man-dc4dev-artifactory01.ove.local-releases</name>
+      <url>http://artifactory.ove.local:8080/artifactory/libs-releases-local</url>
+    </repository>
+  </distributionManagement>
 
   <build>
     <plugins>

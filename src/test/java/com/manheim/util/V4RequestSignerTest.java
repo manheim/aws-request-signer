@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 
 /**
  * Test the V4 signing process. Example values are taken from: http://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html
- * 
+ *
  * @author Eric Haynes
  */
 public class V4RequestSignerTest {
@@ -85,6 +85,17 @@ public class V4RequestSignerTest {
       StringBuilder builder = new StringBuilder();
       testObject.addCanonicalQueryString(queryString, builder);
       assertEquals(expected, builder.toString());
+   }
+
+   @Test
+   public final void canonicalQueryStringDoesNotAddLeadingAmpersand() {
+      String queryString = createQueryString(
+            "test", "value"
+      );
+      String expected = "test=value";
+      StringBuilder builder = new StringBuilder("stuff in front");
+      testObject.addCanonicalQueryString(queryString, builder);
+      assertEquals(expected, builder.toString().replace("stuff in front", ""));
    }
 
    @Test
