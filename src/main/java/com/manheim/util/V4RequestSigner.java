@@ -2,6 +2,7 @@ package com.manheim.util;
 
 import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import org.apache.commons.logging.Log;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -19,6 +20,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.apache.commons.logging.LogFactory.getLog;
+
 /**
  * Signs requests using the (at this time current) V4 request signing scheme.
  *
@@ -27,6 +30,8 @@ import java.util.*;
  * @author Eric Haynes
  */
 public class V4RequestSigner implements RequestSigner {
+   private static final Log log = getLog(V4RequestSigner.class);
+
    public static final String ENCODING = "UTF8";
    public static final String ISO_8601_TIME_FORMAT = "yyyyMMdd'T'HHmmss'Z'";
    public static final String ISO_8601_DATE_FORMAT = "yyyyMMdd";
@@ -65,9 +70,11 @@ public class V4RequestSigner implements RequestSigner {
    @Override
    public void signRequest(HttpUriRequest request) {
       String canonicalRequest = createCanonicalRequest(request);
+      log.debug("canonicalRequest: " + canonicalRequest);
       String[] requestParts = canonicalRequest.split("\n");
       String signedHeaders = requestParts[requestParts.length - 2];
       String stringToSign = createStringToSign(canonicalRequest);
+      log.debug("stringToSign: " + stringToSign);
       String authScope = stringToSign.split("\n")[2];
       String signature = createSignature(stringToSign);
 
