@@ -1,5 +1,6 @@
 package com.manheim.util;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import org.apache.commons.logging.Log;
@@ -46,10 +47,10 @@ public class V4RequestSigner implements RequestSigner {
 
    private final String regionName;
    private final String serviceName;
-   private final AWSCredentialsProviderChain awsCredentialsProvider;
+   private final AWSCredentialsProvider awsCredentialsProvider;
    private final Date currentTime;
 
-   public V4RequestSigner(AWSCredentialsProviderChain awsCredentialsProvider, String regionName, String serviceName) {
+   public V4RequestSigner(AWSCredentialsProvider awsCredentialsProvider, String regionName, String serviceName) {
       this(awsCredentialsProvider, regionName, serviceName, null);
    }
 
@@ -60,7 +61,7 @@ public class V4RequestSigner implements RequestSigner {
    /**
     * Test constructor with overriden date
     */
-   V4RequestSigner(AWSCredentialsProviderChain awsCredentialsProvider, String regionName, String serviceName, Date currentTime) {
+   V4RequestSigner(AWSCredentialsProvider awsCredentialsProvider, String regionName, String serviceName, Date currentTime) {
       this.regionName = regionName;
       this.serviceName = serviceName;
       this.awsCredentialsProvider = awsCredentialsProvider;
