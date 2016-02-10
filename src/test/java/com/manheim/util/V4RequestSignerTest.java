@@ -2,6 +2,7 @@ package com.manheim.util;
 
 import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import org.apache.http.Header;
 import org.apache.http.client.methods.HttpPost;
@@ -18,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static com.manheim.util.V4RequestSigner.SESSION_TOKEN_HEADER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
@@ -276,6 +278,20 @@ public class V4RequestSignerTest {
       Header[] authorizations = request.getHeaders("Authorization");
       assertEquals(1, authorizations.length);
       assertEquals(expected, authorizations[0].getValue());
+   }
+
+   @Test
+   public final void addsSessionTokenHeaderWhenSessionCredentialsAreProvided() {
+      String sessionToken = "sessionToken";
+      StaticCredentialsProvider credentialsProvider =
+            new StaticCredentialsProvider(new BasicSessionCredentials("accessKey", "secretKey", sessionToken));
+      testObject = new V4RequestSigner(credentialsProvider, REGION_NAME, SERVICE_NAME, currentDate);
+      HttpPost request = createTestRequest();
+      testObject.signRequest(request);
+      Header[] tokenHeaders = request.getHeaders(SESSION_TOKEN_HEADER);
+      assertEquals(1, tokenHeaders.length);
+      assertEquals(SESSION_TOKEN_HEADER, tokenHeaders[0].getName());
+      assertEquals(sessionToken, tokenHeaders[0].getValue());
    }
 
    private HttpPost createTestRequest() {

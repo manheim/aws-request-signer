@@ -1,8 +1,6 @@
 package com.manheim.util;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.*;
 import org.apache.commons.logging.Log;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -44,6 +42,7 @@ public class V4RequestSigner implements RequestSigner {
    public static final String AUTH_HEADER_NAME = "Authorization";
    public static final String AUTH_HEADER_FORMAT =
          SIGN_STRING_ALGORITHM_NAME + " Credential=%s/%s, SignedHeaders=%s, Signature=%s";
+   public static final String SESSION_TOKEN_HEADER = "X-Amz-Security-Token";
 
    private final String regionName;
    private final String serviceName;
@@ -70,6 +69,10 @@ public class V4RequestSigner implements RequestSigner {
 
    @Override
    public void signRequest(HttpUriRequest request) {
+      AWSCredentials credentials = awsCredentialsProvider.getCredentials();
+      if (credentials instanceof AWSSessionCredentials) {
+         request.addHeader(SESSION_TOKEN_HEADER, ((AWSSessionCredentials) credentials).getSessionToken());
+      }
       String canonicalRequest = createCanonicalRequest(request);
       log.debug("canonicalRequest: " + canonicalRequest);
       String[] requestParts = canonicalRequest.split("\n");
@@ -79,7 +82,7 @@ public class V4RequestSigner implements RequestSigner {
       String authScope = stringToSign.split("\n")[2];
       String signature = createSignature(stringToSign);
 
-      String authHeader = String.format(AUTH_HEADER_FORMAT, awsCredentialsProvider.getCredentials().getAWSAccessKeyId(),
+      String authHeader = String.format(AUTH_HEADER_FORMAT, credentials.getAWSAccessKeyId(),
             authScope, signedHeaders, signature);
 
       request.addHeader(AUTH_HEADER_NAME, authHeader);
