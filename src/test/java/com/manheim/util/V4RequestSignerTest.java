@@ -294,6 +294,16 @@ public class V4RequestSignerTest {
       assertEquals(sessionToken, tokenHeaders[0].getValue());
    }
 
+   @Test
+   public final void emptyRequestPathIsSlash() throws UnsupportedEncodingException {
+      HttpPost request = new HttpPost("https://iam.amazonaws.com");
+      request.addHeader("Content-type", TEST_CONTENT_TYPE);
+      request.setEntity(new StringEntity(TEST_ACTION));
+
+      String canonicalRequest = testObject.createCanonicalRequest(request);
+      assertEquals("/", canonicalRequest.split("\n")[1]);
+   }
+
    private HttpPost createTestRequest() {
       try {
          HttpPost request = new HttpPost(TEST_ENDPOINT);

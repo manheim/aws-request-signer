@@ -109,7 +109,12 @@ public class V4RequestSigner implements RequestSigner {
 
    String createCanonicalRequest(HttpUriRequest request) {
       StringBuilder result = new StringBuilder();
-      result.append(request.getMethod()).append('\n').append(request.getURI().getPath()).append('\n');
+      result.append(request.getMethod()).append('\n');
+      String path = request.getURI().getPath();
+      if (path.isEmpty()) {
+         path = "/";
+      }
+      result.append(path).append('\n');
       String queryString = request.getURI().getQuery();
       queryString = queryString != null ? queryString : "";
       addCanonicalQueryString(queryString, result).append('\n');
